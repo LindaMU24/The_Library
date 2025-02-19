@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class UserMenu {
 
     private UsersDAO usersDAO = new UsersDAO();
+    private BookMenu bookMenu = new BookMenu();
     private Scanner sc = new Scanner(System.in);
 
     public void showMenu() throws SQLException {
@@ -11,6 +12,9 @@ public class UserMenu {
             System.out.println("----- User Menu -----");
             System.out.println("1. Log In");
             System.out.println("2. Register New User");
+            System.out.println("3. Borrow a book"); //This will lead to list the books in the library. Search genre, book title and author.
+            System.out.println("4. Return a book");
+            System.out.println("5. List my borrowed books");
             System.out.println("0. Back to Main Menu");
 
             String choice = sc.nextLine();
@@ -21,6 +25,8 @@ public class UserMenu {
                     break;
                 case "2":
                     registerUser();
+                    break;
+                    case "3": bookMenu.showBooksOptions(false);
                     break;
                 case "0":
                     return;

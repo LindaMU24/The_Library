@@ -5,9 +5,9 @@ public class Books {
     private String author;
     private int year;
     private String genre;
-    private Boolean available;
+    private boolean available;
 
-    public Books(int id, String title, String author, int year, String genre, Boolean available) {
+    public Books(int id, String title, String author, int year, String genre, boolean available) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -56,11 +56,11 @@ public class Books {
         this.genre = genre;
     }
 
-    public Boolean getAvailable() {
+    public boolean isAvailable() {
         return available;
     }
 
-    public void setAvailable(Boolean available) {
+    public void setAvailable(boolean available) {
         this.available = available;
     }
 
