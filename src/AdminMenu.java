@@ -32,6 +32,7 @@ public class AdminMenu {
             }
         }
     }
+
     private void loginAdmin() throws SQLException {
         System.out.println("Enter email:");
         String email = sc.nextLine();
@@ -51,6 +52,7 @@ public class AdminMenu {
             System.out.println("Invalid email or password.");
         }
     }
+
     private boolean isAdmin(String email) throws SQLException {
         // Kontrollera om e-postadressen tillhör en admin
         String roleCheckQuery = "SELECT role FROM users WHERE email = ?";
@@ -72,6 +74,27 @@ public class AdminMenu {
     // Placeholder för registerAdmin-metoden
     private void registerAdmin() {
         System.out.println("Registering new admin...");
-        // Här kan du lägga till kod för att registrera en ny admin
+        System.out.println("Enter your name:");
+        String name = sc.nextLine();
+        System.out.println("Enter your email:");
+        String email = sc.nextLine();
+        System.out.println("Enter your password:");
+        String password = sc.nextLine();
+
+        // Använd Role direkt istället för Users.Role
+        Users newUser = new Users(0, name, password, email, Role.ADMIN);
+
+        try {
+            boolean success = usersDAO.addUser(newUser);
+            if (success) {
+                System.out.println("Registration successful! You can now log in.");
+            } else {
+                System.out.println("Registration failed. Email might already be in use.");
+            }
+        } catch (SQLException e) {
+            System.out.println("An error occurred while trying to register. Please try again later.");
+            e.printStackTrace();
+        }
     }
 }
+
