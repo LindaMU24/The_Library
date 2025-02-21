@@ -12,8 +12,8 @@ public class ConsolView {
         while (true) {
             System.out.println("Welcome to the Library");
             System.out.println("---- Main Menu ----");
-            System.out.println("1. User Login");
-            System.out.println("2. Admin Login");
+            System.out.println("1. User");
+            System.out.println("2. Admin");
             System.out.println("0. Exit");
 
             String choice = sc.nextLine();

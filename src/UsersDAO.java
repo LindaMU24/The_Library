@@ -2,6 +2,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsersDAO {
 
@@ -62,5 +64,31 @@ public class UsersDAO {
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0; // Returnera true om en rad lades till
         }
+    }
+
+    public List<Users> listAllUsers() throws SQLException {
+        List<Users> users = new ArrayList<>();
+        String query = "SELECT id, name, password, email, role FROM users"; // Lägg till 'password' i frågan
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String password = rs.getString("password"); // Hämta lösenordet
+                String email = rs.getString("email");
+                String roleString = rs.getString("role");
+
+                // Konvertera strängen till stora bokstäver för att matcha enum-konstanterna
+                Role role = Role.valueOf(roleString.toUpperCase());
+
+                Users user = new Users(id, name, password, email, role);
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 }
