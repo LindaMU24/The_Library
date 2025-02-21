@@ -1,6 +1,6 @@
 Welcome to The Library.
 
-This is a schoolproject made with IntelliJ Java, MySQL and JDBC.
+This is a school project made with IntelliJ Java, MySQL and JDBC.
 To run this project you need to:
 - Clone this repository.
 - Copy and paste the pre-written database setup in MySQL (you'll find it below).
