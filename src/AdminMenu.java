@@ -56,6 +56,7 @@ public class AdminMenu {
         System.out.println("2. Add new book");
         System.out.println("3. Delete book");
         System.out.println("4. List all users");
+        System.out.println("5. Delete user");
         System.out.println("0. Log Out");
         System.out.print("Choose an option: ");
 
@@ -74,6 +75,9 @@ public class AdminMenu {
             case "4":
                 listAllUsers();
                 break;
+                case "5":
+                    deleteUser();
+                    break;
             case "0":
                 logOutAdmin();
                 return;
@@ -81,19 +85,30 @@ public class AdminMenu {
                 System.out.println("Invalid option, try again.");
         }
     }
-
-
     private void loginAdmin() throws SQLException {
-        System.out.println("Enter email:");
-        String email = sc.nextLine();
+        String email = "";
+        String password = "";
+
+        while (email.isEmpty()) {
+            System.out.println("Enter email:");
+            email = sc.nextLine().trim();
+            if (email.isEmpty()) {
+                System.out.println("Email cannot be empty. Please try again.");
+            }
+        }
 
         if (!isAdmin(email)) {
             System.out.println("User is not an admin.");
             return;
         }
 
-        System.out.println("Enter password:");
-        String password = sc.nextLine();
+        while (password.isEmpty()) {
+            System.out.println("Enter password:");
+            password = sc.nextLine().trim();
+            if (password.isEmpty()) {
+                System.out.println("Password cannot be empty. Please try again.");
+            }
+        }
 
         Users admin = usersDAO.adminLogin(email, password);
         if (admin != null) {
@@ -124,12 +139,38 @@ public class AdminMenu {
 
     private void registerAdmin() {
         System.out.println("Registering new admin...");
-        System.out.println("Enter your name:");
-        String name = sc.nextLine();
-        System.out.println("Enter your email:");
-        String email = sc.nextLine();
-        System.out.println("Enter your password:");
-        String password = sc.nextLine();
+        String name = "";
+        String email = "";
+        String password = "";
+
+
+        while (true) {
+            System.out.println("Enter your name:");
+            name = sc.nextLine();
+            if (name.isEmpty()) {
+                System.out.println("Name cannot be empty! Please try again.");
+            } else {
+                break;
+            }
+        }
+        while (true) {
+            System.out.println("Enter your email:");
+            email = sc.nextLine();
+            if (email.isEmpty() || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                System.out.println("Please enter a valid email address. Try again.");
+            } else {
+                break;
+            }
+        }
+        while (true) {
+            System.out.println("Enter your password:");
+            password = sc.nextLine();
+            if (password.isEmpty()) {
+                System.out.println("Password cannot be empty! Please try again.");
+            } else {
+                break;
+            }
+        }
 
         Users newUser = new Users(0, name, password, email, Role.ADMIN);
 
@@ -213,7 +254,20 @@ public class AdminMenu {
         List<Users> users = userDAO.listAllUsers();
 
         for (Users user : users) {
-            System.out.println("ID: " + user.getId() + ", Name: " + user.getName() + ", Email: " + user.getEmail());
+            System.out.println("ID: " + user.getId() + ", Name: " + user.getName() + ", Email: " + user.getEmail()+ ", Role: " + user.getRole());
+        }
+    }
+    private void deleteUser() throws SQLException {
+        listAllUsers();
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the ID of the user to delete: ");
+        int userId = sc.nextInt();
+
+        boolean success = usersDAO.deleteUserById(userId);
+        if (success) {
+            System.out.println("User deleted successfully.");
+        } else {
+            System.out.println("Failed to delete the user. User may not exist.");
         }
     }
     }

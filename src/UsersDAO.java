@@ -91,4 +91,14 @@ public class UsersDAO {
         }
         return users;
     }
+    public boolean deleteUserById(int userId) throws SQLException {
+        String query = "DELETE FROM users WHERE id = ?";
+
+        try (Connection connection = Database.getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        }
+    }
 }

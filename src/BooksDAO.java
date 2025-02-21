@@ -137,6 +137,10 @@ public class BooksDAO {
 
     public List<Books> searchBookByTitle(String titlePart) throws SQLException {
         List<Books> books = new ArrayList<>();
+        // Kontrollera om titlePart är tom och returnera en tom lista om så är fallet
+        if (titlePart == null || titlePart.trim().isEmpty()) {
+            return books; // Returnera tom lista
+        }
         String query = "SELECT * FROM books WHERE title LIKE ?";
 
         try (Connection connection = Database.getConnection();
@@ -161,6 +165,10 @@ public class BooksDAO {
 
     public List<Books> searchBookByAuthor(String authorPart) throws SQLException {
         List<Books> books = new ArrayList<>();
+        // Kontrollera om titlePart är tom och returnera en tom lista om så är fallet
+        if (authorPart == null || authorPart.trim().isEmpty()) {
+            return books; // Returnera tom lista
+        }
         String query = "SELECT * FROM books WHERE author LIKE ?";
 
         try (Connection connection = Database.getConnection();
@@ -198,21 +206,26 @@ public class BooksDAO {
         return genres;
     }
 
-    public List<Books> getAllGenres(String genre) throws SQLException {
+    public List<Books> getAllGenres(String genrePart) throws SQLException {
         List<Books> books = new ArrayList<>();
-        String query = "SELECT * FROM books WHERE genre = ?";
+
+        if (genrePart == null || genrePart.trim().isEmpty()) {
+            return books;
+        }
+        String query = "SELECT * FROM books WHERE LOWER(genre) LIKE LOWER(?)";
+
 
         try (Connection connection = Database.getConnection();
              PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setString(1, genre);
+            pstmt.setString(1, "%" + genrePart + "%");
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                String bookGenre = rs.getString("genre");
                 int id = rs.getInt("id");
                 String title = rs.getString("title");
                 String author = rs.getString("author");
                 int year = rs.getInt("year");
+                String genre = rs.getString("genre");
                 boolean available = rs.getBoolean("available");
 
                 Books book = new Books(id, title, author, year, genre, available);

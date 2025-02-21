@@ -59,8 +59,16 @@ public class BookMenu {
 
     private void searchTitle() throws SQLException {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter search criteria (part of the title):");
-        String titlePart = sc.nextLine();
+        String titlePart = "";
+
+        // Loop för att säkerställa att användaren skriver in något
+        while (titlePart.isEmpty()) {
+            System.out.println("Enter search criteria (part of the title):");
+            titlePart = sc.nextLine().trim();  // trim() tar bort överflödiga mellanslag
+            if (titlePart.isEmpty()) {
+                System.out.println("Search criteria cannot be empty! Please try again.");
+            }
+        }
 
         BooksDAO booksDAO = new BooksDAO();
         List<Books> matchingBooks = booksDAO.searchBookByTitle(titlePart);
@@ -79,8 +87,14 @@ public class BookMenu {
 
     private void searchAuthor() throws SQLException {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter search criteria (part of the Authors name):");
-        String authorPart = sc.nextLine();
+        String authorPart = "";
+        while (authorPart.isEmpty()) {
+            System.out.println("Enter search criteria (part of the Authors name):");
+            authorPart = sc.nextLine().trim();
+            if (authorPart.isEmpty()) {
+                System.out.println("Search criteria cannot be empty! Please try again.");
+            }
+        }
 
         BooksDAO booksDAO = new BooksDAO();
         List<Books> matchingBooks = booksDAO.searchBookByAuthor(authorPart);
@@ -102,16 +116,28 @@ public class BookMenu {
         List<String> genres = booksDAO.getAllUniqueGenres();
         System.out.println("Available genres:");
         for (String genre : genres) {
-            System.out.println(genre);
+            System.out.println("- " + genre);
         }
 
-        System.out.print("Enter genre: ");
-        String selectedGenre = sc.nextLine();
-        List<Books> booksInGenre = booksDAO.getAllGenres(selectedGenre);
+        String selectedGenre = "";
+        while (selectedGenre.isEmpty()) {
+            System.out.print("Enter part of the genre: ");
+            selectedGenre = sc.nextLine().trim();
 
-        System.out.println("Books in the selected genre:");
-        for (Books book : booksInGenre) {
-            System.out.println(book);
+            selectedGenre = selectedGenre.replaceAll("^-\\s*", "");
+
+            List<Books> booksInGenre = booksDAO.getAllGenres(selectedGenre);
+
+            if (booksInGenre.isEmpty()) {
+                System.out.println("No books found in the selected genre.");
+            } else {
+                System.out.println("Books in the selected genre:");
+                for (Books book : booksInGenre) {
+                    System.out.println("Title: " + book.getTitle() + ", Author: " + book.getAuthor() +
+                            ", Year: " + book.getYear() + ", Genre: " + book.getGenre() +
+                            ", Available: " + (book.isAvailable() ? "Yes" : "No"));
+                }
+            }
         }
     }
 }

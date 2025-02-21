@@ -67,7 +67,7 @@ public class LoansDAO {
             pstmt.setInt(2, bookId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace(); // Logga felet för att hjälpa med felsökning
+            e.printStackTrace();
             throw e; // Kasta vidare undantaget så att det kan hanteras i transaktionen
         }
     }

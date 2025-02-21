@@ -84,36 +84,75 @@ import java.util.Scanner;
                 System.out.println("Invalid option, try again.");
         }
     }
+        private void loginUser() throws SQLException {
+            String email = "";
+            String password = "";
 
-    private void loginUser() throws SQLException {
-        System.out.println("Enter your email:");
-        String email = sc.nextLine();
-        System.out.println("Enter your password:");
-        String password = sc.nextLine();
-
-        try {
-            Users user = usersDAO.userLogin(email, password);
-            if (user != null) {
-                System.out.println("Welcome, " + user.getName() + "!");
-                isLoggedIn = true;
-                loggedInUser = user; // Spara den inloggade användaren
-            } else {
-                System.out.println("Invalid email or password. Please try again.");
+            while (email.isEmpty()) {
+                System.out.println("Enter your email:");
+                email = sc.nextLine().trim();
+                if (email.isEmpty()) {
+                    System.out.println("Email cannot be empty. Please try again.");
+                }
             }
-        } catch (SQLException e) {
-            System.out.println("An error occurred while trying to log in. Please try again later.");
-            e.printStackTrace();
+
+            while (password.isEmpty()) {
+                System.out.println("Enter your password:");
+                password = sc.nextLine().trim();
+                if (password.isEmpty()) {
+                    System.out.println("Password cannot be empty. Please try again.");
+                }
+            }
+
+            try {
+                Users user = usersDAO.userLogin(email, password);
+                if (user != null) {
+                    System.out.println("Welcome, " + user.getName() + "!");
+                    isLoggedIn = true;
+                    loggedInUser = user; // Spara den inloggade användaren
+                } else {
+                    System.out.println("Invalid email or password. Please try again.");
+                }
+            } catch (SQLException e) {
+                System.out.println("An error occurred while trying to log in. Please try again later.");
+                e.printStackTrace();
+            }
         }
-    }
 
     private void registerUser() {
-        System.out.println("Enter your name:");
-        String name = sc.nextLine();
-        System.out.println("Enter your email:");
-        String email = sc.nextLine();
-        System.out.println("Enter your password:");
-        String password = sc.nextLine();
+        System.out.println("Registering new user...");
+        String name = "";
+        String email = "";
+        String password = "";
 
+
+        while (true) {
+            System.out.println("Enter your name:");
+            name = sc.nextLine();
+            if (name.isEmpty()) {
+                System.out.println("Name cannot be empty! Please try again.");
+            } else {
+                break;
+            }
+        }
+        while (true) {
+            System.out.println("Enter your email:");
+            email = sc.nextLine();
+            if (email.isEmpty() || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                System.out.println("Please enter a valid email address. Try again.");
+            } else {
+                break;
+            }
+        }
+        while (true) {
+            System.out.println("Enter your password:");
+            password = sc.nextLine();
+            if (password.isEmpty()) {
+                System.out.println("Password cannot be empty! Please try again.");
+            } else {
+                break;
+            }
+        }
         Users newUser = new Users(0, name, password, email, Role.USER);
 
         try {
@@ -131,7 +170,10 @@ import java.util.Scanner;
     private void listBooks() throws SQLException {
         List<Books> books = booksDAO.listAllBooks(false);
         for (Books book : books) {
-            System.out.println("ID: " + book.getId() + ", Title: " + book.getTitle() + ", Author: " + book.getAuthor());
+            System.out.println("ID: " + book.getId() + ", Title: " + book.getTitle() +
+                    ", Author: " + book.getAuthor()+ ", Year: " + book.getYear() +
+                    ", Genre: " + book.getGenre() +
+                    ", Available: " + (book.isAvailable() ? "Yes" : "No"));
         }
     }
 
